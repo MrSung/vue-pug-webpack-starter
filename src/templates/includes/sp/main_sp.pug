@@ -5,7 +5,7 @@ html(lang="ja")
   head
     block metaInfo
       meta(charset="utf-8")
-      title Sample title
+      title Sample SP title
       meta(name="description" content="Sample description")
       meta(name="viewport" content="width=device-width, initial-scale=1")
       link(rel="stylesheet", href=`/css/${entrypointName}.css`)
@@ -15,6 +15,6 @@ html(lang="ja")
     if isProd
       p This is prod environment
     main
-      h1 This is a sample file, and I know it.
+      h1 This is a sample SP file, and I know it.
       #app
     script(defer, src=`/js/${entrypointName}.js`, charset="utf-8")

@@ -34,37 +34,39 @@ const pureCssFilesRegExp = new RegExp(pureCssFilesPattern);
  */
 function generateHtmlPlugins(templateDir) {
   const templateFiles = fs.readdirSync(path.resolve(__dirname, templateDir));
-  const templateSubDirName = templateDir.split('/').pop();
   return templateFiles
     .filter((templatePath) => templatePath.endsWith('.pug'))
     .map((item) => {
       const [name, extension] = item.split('.');
       const subDirName = templateDir.split('/views/').pop();
+      const filename = `${subDirName}/${name}.html`;
       const pluginOption = {
         inject: false,
         chunks: name,
-        filename: `${subDirName}/${name}.html`,
+        filename,
         template: path.resolve(__dirname, `${templateDir}/${name}.${extension}`),
         minify: false,
         isDev,
         isProd,
         // Custom property
-        entrypointName: templateSubDirName,
+        entrypointName: `${subDirName}/${name}`,
       };
-      // eslint-disable-next-line no-console
-      console.log(pluginOption);
       return new HtmlWebpackPlugin(pluginOption);
     });
 }
 
-const sampleHtmlPlugins = generateHtmlPlugins('./src/templates/views/sample');
+const htmlPluginsSample = generateHtmlPlugins('./src/templates/views/sample');
+const htmlPluginsSamplePC = generateHtmlPlugins('./src/templates/views/pc');
+const htmlPluginsSampleSP = generateHtmlPlugins('./src/templates/views/sp');
 
 const webpackConfig = {
   mode: isProd ? 'production' : 'development',
   cache: true,
   devtool: !isProd && 'inline-source-map',
   entry: {
-    sample: './src/js/sample.js',
+    'sample/index': './src/js/sample.js',
+    'pc/sample_pc': './src/js/pc/sample_pc.js',
+    'sp/sample_sp': './src/js/sp/sample_sp.js',
   },
   output: {
     path: path.join(__dirname, 'dist'),
@@ -188,7 +190,6 @@ const webpackConfig = {
     historyApiFallback: true,
     contentBase: [path.join(__dirname, 'static')],
     port: 3150,
-    open: true,
     proxy: {
       // e.g. API server
     },
@@ -233,16 +234,18 @@ const webpackConfig = {
     new MiniCssExtractPlugin({
       filename: 'css/[name].css',
     }),
+    new CleanWebpackPlugin(),
   ],
 };
 
 // Set HtmlWebpackPlugin instances
 webpackConfig.plugins = (webpackConfig.plugins || []).concat(
-  sampleHtmlPlugins,
+  htmlPluginsSample,
+  htmlPluginsSamplePC,
+  htmlPluginsSampleSP,
 );
 
 if (!isDev) {
-  webpackConfig.plugins.push(new CleanWebpackPlugin());
   // Comment out below when analyzing bundle size
   // eslint-disable-next-line global-require
   // const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
