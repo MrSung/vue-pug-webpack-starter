@@ -1,0 +1,19 @@
+- const { entrypointName, isDev, isProd } = self.htmlWebpackPlugin.options
+
+doctype html
+html(lang="ja")
+  head
+    block metaInfo
+      meta(charset="utf-8")
+      title Sample SP title
+      meta(name="description" content="Sample description")
+      meta(name="viewport" content="width=device-width, initial-scale=1")
+      link(rel="stylesheet", href=`/css/${entrypointName}.css`)
+  body
+    if isDev
+      p This is dev environment
+    if isProd
+      p This is prod environment
+    main
+      h1 This is a sample SP file, and I know it.
+    script(defer, src=`/js/${entrypointName}.js`, charset="utf-8")
