@@ -16,7 +16,7 @@
     "postinstall": "rm -rf ./.cache-loader && rm -rf ./node_modules/.cache"
   },
   "dependencies": {
-    "axios": "^0.21.0",
+    "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "glob": "^7.1.6",
     "pug": "^3.0.1",
